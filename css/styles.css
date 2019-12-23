@@ -1,8 +1,39 @@
-canvas {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
+body {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #eeeeee;
+}
+
+h1 {
+    width: 100%;
+    margin: 0;
+    margin-left: 2.5%;
+    padding: 10px 0 10px 0;
+}
+
+#wrapper {
+    width: 60%;
+    height: 100vh;
+    margin: 0 auto;
+    background-color: #ffffff;
     display: block;
-    width: 800px;
+}
+
+main {
+    width: 75%;
+    float: left;
+}
+
+aside {
+    width: 20%;
+    float: left;
+}
+
+button {
+    width: 100%;
+    margin: 2.5%;
+}
+
+canvas {
+    margin: 0 2.5% 0 2.5%;
 }

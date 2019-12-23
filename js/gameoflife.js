@@ -1,16 +1,18 @@
 
 const HEIGHT = 800;
 const WIDTH = 800;
-const SQUARES_PER_ROW = 50;
-const SQUARES_PER_COL = 50;
+const SQUARES_PER_ROW = 30;
+const SQUARES_PER_COL = 30;
 
 let playButton = document.getElementById("playButton");
+let randomButton = document.getElementById("randomButton");
+let clearButton = document.getElementById("clearButton");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let board = [];
 let isPlaying = false;
 
-
+//Create 2d array intialized to 0's
 function initializeArray(array) {
     array = [SQUARES_PER_COL];
     for (let i = 0; i < SQUARES_PER_COL; i++) {
@@ -22,10 +24,39 @@ function initializeArray(array) {
     return array;
 }
 
+//randomly populate 2d array with 1's and 0's (33% chance of a live cell)
+function randomizeArray(array) {
+    array = [SQUARES_PER_COL];
+    for (let i = 0; i < SQUARES_PER_COL; i++) {
+        array[i] = [];
+        for (let j = 0; j < SQUARES_PER_ROW; j++) {
+            let randomNumber = getRandomNumber(1, 3);
+            if (randomNumber === 3)
+                array[i][j] = 1;
+            else
+                array[i][j] = 0;
+        }
+    }
+    return array;
+}
+
 //play button listener
 playButton.addEventListener('click', function (event) {
     playButton.textContent = isPlaying ? "Play" : "Stop";
+    playButton.className = isPlaying ? "btn btn-success" : "btn btn-danger";
     isPlaying = !isPlaying;
+}, false);
+
+//random button listener
+randomButton.addEventListener('click', function (event) {
+    board = randomizeArray(board);
+    drawBoard();
+}, false);
+
+//clear button listener
+clearButton.addEventListener('click', function (event) {
+    board = initializeArray(board);
+    drawBoard();
 }, false);
 
 //on mouse click listener
@@ -36,11 +67,12 @@ canvas.addEventListener('click', function (event) {
 
     let colIndex = Math.floor(y / HEIGHT * SQUARES_PER_COL);
     let rowIndex = Math.floor(x / WIDTH * SQUARES_PER_ROW);
-    board[colIndex][rowIndex] = 1;
+    board[colIndex][rowIndex] = board[colIndex][rowIndex] === 0 ? 1 : 0;
     drawBoard();
 
 }, false);
 
+//draw the grid to the canvas
 function drawBoard() {
     for (let y = 0; y < HEIGHT; y += HEIGHT / SQUARES_PER_COL) {
         for (let x = 0; x < WIDTH; x += WIDTH / SQUARES_PER_ROW) {
@@ -63,6 +95,7 @@ function drawBoard() {
     }
 }
 
+//update the board based on Conway's Game of Life rules
 function update() {
     let tempArray;
     tempArray = initializeArray(tempArray);
@@ -83,6 +116,7 @@ function update() {
     board = tempArray;
 }
 
+//get the number of live cells around a particular cell
 function getNumberOfSurroundingLiveCells(array, col, row) {
     let numOfLiveCells = 0;
 
@@ -105,6 +139,12 @@ function getNumberOfSurroundingLiveCells(array, col, row) {
     return numOfLiveCells;
 }
 
+//generate a random number between two values
+function getRandomNumber(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+}
+
+// game loop
 function gameLoop() {
     if (!isPlaying)
         return;
